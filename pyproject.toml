@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deep-dog-2"
+version = "2.0.1"
+description = "Deep Dog 2: a configurable multi-agent research engine with cited reports."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "Benjamin Andrew Eadie" }]
+keywords = ["research", "agents", "langgraph", "deep-research"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Framework :: LangGraph",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+    "python-dotenv>=1.0",
+    "langchain>=1.0",
+    "langchain-core>=1.0",
+    "langchain-openai>=1.0",
+    "langchain-deepseek>=1.0",
+    "langgraph>=1.0",
+    "langgraph-checkpoint>=2.0",
+    "pydantic>=2.0",
+    "typing-extensions>=4.0",
+    "tavily-python>=0.5",
+    "aiohttp>=3.9",
+    "httpx>=0.27",
+    "beautifulsoup4>=4.12",
+    "nest-asyncio>=1.6",
+    "praw>=7.7",
+    "reportlab>=4.2",
+]
+
+[project.optional-dependencies]
+google = ["langchain-google-genai>=4.0", "google-genai>=1.0"]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.23"]
+
+[project.urls]
+Homepage = "https://github.com/techtonic2025/Deep-Dog-Agent"
+Repository = "https://github.com/techtonic2025/Deep-Dog-Agent"
+Issues = "https://github.com/techtonic2025/Deep-Dog-Agent/issues"
+
+[tool.setuptools.packages.find]
+include = ["deep_research*"]
+exclude = ["tests*", "eval_runs*", "outputs*", "examples*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "smoke: optional single-sentence run against a real provider (skipped by default)",
+]
