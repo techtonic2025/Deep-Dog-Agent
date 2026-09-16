@@ -82,7 +82,28 @@ Una GPU dedicata non è richiesta: il modello viene raggiunto tramite API.
 
 ## Installazione su Windows
 
-### 1. Scarica il progetto
+### Installazione automatica consigliata
+
+Per la maggior parte degli utenti basta estrarre lo ZIP e fare doppio clic su:
+
+```text
+Avvia Deep Dog Web.bat
+```
+
+L'avviatore controlla automaticamente il computer e:
+
+1. cerca Python 3.11 o superiore;
+2. se Python manca, prova a installare Python 3.12 tramite `winget`;
+3. crea l'ambiente isolato `.venv` se non esiste;
+4. aggiorna `pip`;
+5. installa soltanto le dipendenze mancanti o non aggiornate;
+6. avvia Deep Dog e apre il browser.
+
+Al primo avvio è necessaria una connessione Internet e l'operazione può richiedere alcuni minuti. Gli avvii successivi riutilizzano l'ambiente già creato. Se `winget` non è disponibile, l'avviatore mostra il link per installare Python manualmente.
+
+### Installazione manuale
+
+#### 1. Scarica il progetto
 
 Premi **Code → Download ZIP** su GitHub ed estrai l'archivio. In alternativa, se utilizzi Git:
 
@@ -91,7 +112,7 @@ git clone https://github.com/techtonic2025/Deep-Dog-Agent.git
 cd Deep-Dog-Agent
 ```
 
-### 2. Crea l'ambiente Python
+#### 2. Crea l'ambiente Python
 
 Apri PowerShell nella cartella del progetto:
 
@@ -101,7 +122,7 @@ python -m venv .venv
 
 Se il comando `python` non viene trovato, installa Python 3.11 o una versione successiva e abilita l'opzione per aggiungerlo al `PATH`.
 
-### 3. Installa le dipendenze
+#### 3. Installa le dipendenze
 
 Non è necessario attivare manualmente l'ambiente:
 
