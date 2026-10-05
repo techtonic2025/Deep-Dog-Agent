@@ -34,20 +34,49 @@ LINE = colors.HexColor("#D9E6DF")
 
 def _inline(text: str) -> str:
     """Convert a conservative Markdown subset into ReportLab markup."""
-    value = escape(text.strip())
-    value = re.sub(r"`([^`]+)`", r'<font name="Courier">\1</font>', value)
-    value = re.sub(r"\*\*([^*]+)\*\*", r"<b>\1</b>", value)
-    value = re.sub(r"(?<!\*)\*([^*]+)\*(?!\*)", r"<i>\1</i>", value)
+    fragments: list[str] = []
+
+    def stash(markup: str) -> str:
+        token = f"\ue000{len(fragments)}\ue001"
+        fragments.append(markup)
+        return token
+
+    value = text.strip()
+
+    # Protect code spans and Markdown links before adding automatic links.
+    # Otherwise the URL matcher can consume generated tags such as </font>.
+    value = re.sub(
+        r"`([^`]+)`",
+        lambda match: stash(f'<font name="Courier">{escape(match.group(1))}</font>'),
+        value,
+    )
     value = re.sub(
         r"\[([^\]]+)\]\((https?://[^)]+)\)",
-        r'<link href="\2" color="#13795B"><u>\1</u></link>',
+        lambda match: stash(
+            f'<link href="{escape(match.group(2), quote=True)}" color="#13795B">'
+            f'<u>{escape(match.group(1))}</u></link>'
+        ),
         value,
     )
-    value = re.sub(
-        r"(?<![\"=])(https?://[^\s&lt;&gt;]+)",
-        r'<link href="\1" color="#13795B"><u>\1</u></link>',
-        value,
-    )
+
+    def stash_url(match: re.Match[str]) -> str:
+        url = match.group(0)
+        trailing = ""
+        while url and url[-1] in ".,;:!?":
+            trailing = url[-1] + trailing
+            url = url[:-1]
+        markup = (
+            f'<link href="{escape(url, quote=True)}" color="#13795B">'
+            f'<u>{escape(url)}</u></link>'
+        )
+        return stash(markup) + trailing
+
+    value = re.sub(r"https?://[^\s<>]+", stash_url, value)
+    value = escape(value)
+    value = re.sub(r"\*\*([^*]+)\*\*", r"<b>\1</b>", value)
+    value = re.sub(r"(?<!\*)\*([^*]+)\*(?!\*)", r"<i>\1</i>", value)
+    for index, markup in enumerate(fragments):
+        value = value.replace(f"\ue000{index}\ue001", markup)
     return value
 
 
